@@ -15,10 +15,19 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 from soulFoodApp import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
+    url(r'^shop/sign-in/$', auth_views.login, 
+        {'template_name': 'shop/sign-in.html'},
+        name = 'shop-sign-in'),
+    url(r'^shop/sign-out/$', auth_views.logout,
+        {'next-page', '/'},
+        name = 'shop-sign-out'),
+
+
 ]
