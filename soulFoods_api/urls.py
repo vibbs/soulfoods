@@ -26,8 +26,10 @@ urlpatterns = [
         {'template_name': 'shop/sign-in.html'},
         name = 'shop-sign-in'),
     url(r'^shop/sign-out/$', auth_views.logout,
-        {'next-page', '/'},
+        {'next_page': '/'},
         name = 'shop-sign-out'),
-
+    url(r'^shop/$', views.shop_home, name = 'shop-home'),
+    url(r'^shop/sign-up/$', views.shop_sign_up,
+        name = 'shop-sign-up'),
 
 ]
