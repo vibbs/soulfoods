@@ -1,18 +1,3 @@
-"""soulFoods_api URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.10/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -23,8 +8,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
+
+
+    #SHOP based endpoints
     url(r'^shop/sign-in/$', auth_views.login, 
         {'template_name': 'shop/sign-in.html'},
         name = 'shop-sign-in'),
@@ -34,5 +23,11 @@ urlpatterns = [
     url(r'^shop/$', views.shop_home, name = 'shop-home'),
     url(r'^shop/sign-up/$', views.shop_sign_up,
         name = 'shop-sign-up'),
+
+    url(r'^shop/account/$', views.shop_account, name = 'shop-account'),
+    url(r'^shop/item/$', views.shop_item, name = 'shop-item'),
+    url(r'^shop/order/$', views.shop_order, name = 'shop-order'),
+    url(r'^shop/report/$', views.shop_report, name = 'shop-report'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

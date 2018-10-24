@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+    Shop, Hi {{ request.user }}
+    <hr/>
+
+    <a href="{% url 'shop-account' %}" >Account</a>
+    -
+    <a href="{% url 'shop-item' %}" >Item</a>
+    -
+    <a href="{% url 'shop-order' %}" >Order</a>
+    -
+    <a href="{% url 'shop-report' %}" >Report</a>
+
+
+{% endblock %}

@@ -14,6 +14,22 @@ def home(request):
 def shop_home(request):
     return render(request, 'shop/home.html', {})    
 
+@login_required(login_url='/shop/sign-in/')
+def shop_account(request):
+    return render(request, 'shop/account.html', {})  
+
+@login_required(login_url='/shop/sign-in/')
+def shop_item(request):
+    return render(request, 'shop/item.html', {})  
+
+@login_required(login_url='/shop/sign-in/')
+def shop_order(request):
+    return render(request, 'shop/order.html', {})  
+
+@login_required(login_url='/shop/sign-in/')
+def shop_report(request):
+    return render(request, 'shop/report.html', {})  
+    
 
 def shop_sign_up(request):
     user_form = UserForm()
@@ -40,3 +56,6 @@ def shop_sign_up(request):
         'user_form' : user_form,
         'shop_form' : shop_form
     })    
+
+
+    
