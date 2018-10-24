@@ -16,7 +16,7 @@
 </head>
 <body>
     Shops SignUp Page
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
         {{ user_form }}
         {{ shop_form }}    

@@ -11,5 +11,6 @@ class Shop(models.Model):
     address = models.CharField(max_length=500)
     logo = models.ImageField(upload_to='shop_logo/', blank=False)
 
+    #the below is needed so that the view on the admin page is redable
     def __str__(self):
         return self.name

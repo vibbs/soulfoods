@@ -14,3 +14,9 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "soulFoods_api.settings")
 
 application = get_wsgi_application()
+
+
+# User whitenoise pkg to serve static files on Heroku
+from whitenoise.django import DjangoWhiteNoise
+
+application = DjangoWhiteNoise(application)

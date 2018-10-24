@@ -19,6 +19,9 @@ from django.contrib.auth import views as auth_views
 
 from soulFoodApp import views
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
@@ -32,4 +35,4 @@ urlpatterns = [
     url(r'^shop/sign-up/$', views.shop_sign_up,
         name = 'shop-sign-up'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

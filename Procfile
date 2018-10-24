@@ -1,0 +1,1 @@
+web: gunicorn soulFoods_api.wsgi --log-file -
