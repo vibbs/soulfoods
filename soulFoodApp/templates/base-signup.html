@@ -14,11 +14,32 @@
 
     
 </head>
-<body>
-    
-    {% block heading %} {% endblock %}
+<body class="bg-blue">
 
-    {% block content %}{% endblock %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4">
+                <br/>
+                <br/>
+                <br/>
+                
+                <div class="panel panel-body">
+                    <div class="panel-body">
+                        <h3 class="text-center text-uppercase"><b>
+                                {% block heading %} {% endblock %}
+                        </b></h3>
+                        <br/>
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+   
+
+    
 
 </body>
 </html>
