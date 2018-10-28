@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from soulFoodApp.forms import UserForm, ShopForm
+from soulFoodApp.forms import UserForm, ShopForm, UserFormForEdit, ItemForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from soulFoodApp.models import Item
 
 
 # Create your views here.
@@ -12,15 +13,63 @@ def home(request):
 
 @login_required(login_url='/shop/sign-in/')
 def shop_home(request):
-    return render(request, 'shop/home.html', {})    
+    return redirect(shop_order)
 
 @login_required(login_url='/shop/sign-in/')
 def shop_account(request):
-    return render(request, 'shop/account.html', {})  
+    user_form = UserFormForEdit(instance = request.user)
+    shop_form = ShopForm(instance = request.user.shop)
+
+    if request.method == "POST" :
+        user_form = UserFormForEdit(request.POST, instance = request.user)
+        shop_form = ShopForm(request.POST, request.FILES, instance = request.user.shop)
+
+        if user_form.is_valid() and shop_form.is_valid():
+            user_form.save()
+            shop_form.save()
+
+    return render(request, 'shop/account.html', {
+        "user_form" :user_form,
+        "shop_form" :shop_form
+    })  
 
 @login_required(login_url='/shop/sign-in/')
 def shop_item(request):
-    return render(request, 'shop/item.html', {})  
+    items = Item.objects.filter(shop = request.user.shop).order_by("-id")
+    return render(request, 'shop/item.html', {"items" : items})  
+
+@login_required(login_url='/shop/sign-in/')
+def shop_add_item(request):
+    item_form = ItemForm()
+
+    if request.method == "POST" :
+        item_form = ItemForm(request.POST, request.FILES)
+
+        if item_form.is_valid():
+            item = item_form.save(commit=False)
+            item.shop = request.user.shop
+            item.save()
+
+            return redirect(shop_item)
+
+    return render(request, 'shop/add-item.html', {
+        "item_form" :item_form
+    })     
+
+@login_required(login_url='/shop/sign-in/')
+def shop_edit_item(request, item_id):
+    item_form = ItemForm(instance = Item.objects.get(id = item_id))
+
+    if request.method == "POST" :
+        item_form = ItemForm(request.POST, request.FILES, instance = Item.objects.get(id = item_id))
+
+        if item_form.is_valid():
+            item_form.save()
+            return redirect(shop_item)
+
+    return render(request, 'shop/edit-item.html', {
+        "item_form" :item_form
+    })          
 
 @login_required(login_url='/shop/sign-in/')
 def shop_order(request):

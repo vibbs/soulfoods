@@ -1,16 +1,32 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-    Shop, Hi {{ request.user }}
-    <hr/>
+  <div class="text-center">
+      <img class="img-circle" src="{{ MEDIA_URL }}{{ request.user.shop.logo }}" 
+      width="70" height="70" />
 
-    <a href="{% url 'shop-account' %}" >Account</a>
-    -
-    <a href="{% url 'shop-item' %}" >Item</a>
-    -
-    <a href="{% url 'shop-order' %}" >Order</a>
-    -
-    <a href="{% url 'shop-report' %}" >Report</a>
+      <br/>
+      <br/>
+      <h4>Hi, {{ request.user.get_full_name }}</h4>
+      <h5>{{ request.user.shop.name }}</h5>
+  </div>
 
+  <div class="list-group">
+    <span class="text-uppercase">
+        Dashboard
+        
+        <a href="{% url 'shop-order' %}" class="list-group-item active" >Orders</a>
+        <a href="{% url 'shop-item' %}" class="list-group-item" >Items</a>
+        <a href="{% url 'shop-report' %}" class="list-group-item" >Reports</a>
+
+        <span class="text-uppercase">Profile</span>
+        <a href="{% url 'shop-account' %}" class="list-group-item">Account</a>
+    </span>
+  </div>
+
+  <div class="text-center">
+    <a href="{% url 'shop-sign-out' %}?next={{ request.path }}" 
+        class="btn btn-pink">Logout</a>
+  </div>
 
 {% endblock %}
