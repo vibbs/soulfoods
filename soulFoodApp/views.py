@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from soulFoodApp.forms import UserForm, ShopForm, UserFormForEdit, ItemForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from soulFoodApp.models import Item
+from soulFoodApp.models import Item, Order
 
 
 # Create your views here.
@@ -71,9 +71,23 @@ def shop_edit_item(request, item_id):
         "item_form" :item_form
     })          
 
+
+
+
+### ORDER URLS mentioned here   
 @login_required(login_url='/shop/sign-in/')
 def shop_order(request):
-    return render(request, 'shop/order.html', {})  
+
+    if request.method == "POST":
+        orders = Order.objects.get(id = request.POST["id"], shop = request.user.shop)
+
+        if orders.status == Order.ORDERED:
+            orders.status = Order.SHIPPED
+            orders.save()
+
+
+    orders = Order.objects.filter(shop = request.user.shop).order_by("-id")
+    return render(request, 'shop/order.html', {"orders" : orders })  
 
 @login_required(login_url='/shop/sign-in/')
 def shop_report(request):

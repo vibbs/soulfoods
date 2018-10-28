@@ -1,11 +1,11 @@
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-
-from soulFoodApp import views
-
 from django.conf.urls.static import static
 from django.conf import settings
+
+from soulFoodApp import views, apis
+
 
 urlpatterns = [
 
@@ -31,5 +31,10 @@ urlpatterns = [
     url(r'^shop/order/$', views.shop_order, name = 'shop-order'),
     url(r'^shop/report/$', views.shop_report, name = 'shop-report'),
 
+    #APIS for CUSTOMERS
+    url(r'api/customer/shops/$', apis.customer_get_shops),
+    url(r'api/customer/shops/items/(?P<shop_id>\d+)/$', apis.customer_get_shop_items),
+    url(r'api/customer/order/add/$', apis.customer_add_order),
+    url(r'api/customer/order/latest/$', apis.customer_latest_order),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
