@@ -61,7 +61,7 @@ def customer_add_order(request):
             })  
 
         #Get Order details
-        order_details  = json.load(request.POST["order_details"])
+        order_details  = json.loads(request.POST["order_details"])
 
         order_total = 0
         for item in order_details:

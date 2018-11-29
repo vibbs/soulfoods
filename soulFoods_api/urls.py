@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
@@ -26,10 +26,15 @@ urlpatterns = [
 
     url(r'^shop/account/$', views.shop_account, name = 'shop-account'),
     url(r'^shop/item/$', views.shop_item, name = 'shop-item'),
-     url(r'^shop/item/add/$', views.shop_add_item, name = 'shop-add-item'),
-     url(r'^shop/item/edit/(?P<item_id>\d+)/$', views.shop_edit_item, name = 'shop-edit-item'),
+    url(r'^shop/item/add/$', views.shop_add_item, name = 'shop-add-item'),
+    url(r'^shop/item/edit/(?P<item_id>\d+)/$', views.shop_edit_item, name = 'shop-edit-item'),
     url(r'^shop/order/$', views.shop_order, name = 'shop-order'),
     url(r'^shop/report/$', views.shop_report, name = 'shop-report'),
+
+    # Sign In/ Sign Up/ Sign Out
+    url(r'^api/social/', include('rest_framework_social_oauth2.urls')),
+    # /convert-token (sign in/ sign up)
+    # /revoke-token (sign out)
 
     #APIS for CUSTOMERS
     url(r'api/customer/shops/$', apis.customer_get_shops),
