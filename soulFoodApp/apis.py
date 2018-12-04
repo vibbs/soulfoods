@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from soulFoodApp.models import Shop, Item, Order, OrderDetail
-from soulFoodApp.serializers import ShopSerializer, ItemSerializer
+from soulFoodApp.serializers import ShopSerializer, ItemSerializer, OrderSerializer
 
 # from oauth2_provider.oauth2_validators import OAuth2Validator as \
 #     OrigOAuth2Validator
@@ -48,8 +48,6 @@ def customer_add_order(request):
     """
 
     if request.method == "POST":
-        print("request.POST")
-        print (request.POST)
         #Get Token
         access_token = AccessToken.objects.get(token = request.POST.get("access_token"),
         expires__gt = timezone.now())
@@ -103,7 +101,16 @@ def customer_add_order(request):
 
 
 def customer_latest_order(request):
-    return JsonResponse({})
+
+    access_token = AccessToken.objects.get(token = request.GET.get("access_token"),
+        expires__gt = timezone.now())
+
+    #Get Customer
+    customer = access_token.user.customer
+
+    order = OrderSerializer(Order.objects.filter(customer=customer).last()).data
+
+    return JsonResponse({"order":order})
 
 
 

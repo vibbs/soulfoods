@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from soulFoodApp.models import Shop, Item
+from soulFoodApp.models import Shop, Item, Customer, Order, OrderDetail
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -29,3 +29,42 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ("id", "name", "description", "image", "price", "quantity_per_package", "is_veg", "is_soldout")
+
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source="user.get_full_name")
+
+    class Meta:
+        model = Customer
+        fields = ("id", "name", "avatar", "phone", "address")
+
+
+class OrderShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shop
+        fields = ("id", "shop_name", "phone", "address")
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = ("id", "name", "price")
+
+
+class OrderDetailsSerializer(serializers.ModelSerializer):
+    item = OrderItemSerializer
+    class Meta:
+        model = OrderDetail
+        fields = ("id", "item", "qty", "sub_total")
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    customer  = OrderCustomerSerializer()
+    shop = OrderShopSerializer()
+    order_details = OrderDetailsSerializer(many = True)
+    status = serializers.ReadOnlyField(source="get_status_display")
+
+    class Meta:
+        model = Order
+        fields = ("id", "customer", "shop", "order_details", "total", "status", "address")
+
