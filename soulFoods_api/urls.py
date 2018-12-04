@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^shop/order/$', views.shop_order, name = 'shop-order'),
     url(r'^shop/report/$', views.shop_report, name = 'shop-report'),
 
+   
     # Sign In/ Sign Up/ Sign Out
     url(r'^api/social/', include('rest_framework_social_oauth2.urls')),
     # /convert-token (sign in/ sign up)
@@ -41,5 +42,9 @@ urlpatterns = [
     url(r'api/customer/shops/items/(?P<shop_id>\d+)/$', apis.customer_get_shop_items),
     url(r'api/customer/order/add/$', apis.customer_add_order),
     url(r'api/customer/order/latest/$', apis.customer_latest_order),
+
+    #APIS for shops
+    url(r'^api/shop/order/notification/(?P<last_request_time>.+)/$', apis.shop_order_notification),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

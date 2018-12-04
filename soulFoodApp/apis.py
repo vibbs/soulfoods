@@ -7,6 +7,16 @@ from django.views.decorators.csrf import csrf_exempt
 from soulFoodApp.models import Shop, Item, Order, OrderDetail
 from soulFoodApp.serializers import ShopSerializer, ItemSerializer
 
+# from oauth2_provider.oauth2_validators import OAuth2Validator as \
+#     OrigOAuth2Validator
+
+
+# class OAuth2Validator(OrigOAuth2Validator):
+#     def rotate_refresh_token(self, request):
+#         '''IFTTT Requires our refresh_tokens to be reusable, thus we don't
+#         rotate them'''
+#         return False
+
 
 def customer_get_shops(request):
     shops = ShopSerializer(
@@ -38,6 +48,8 @@ def customer_add_order(request):
     """
 
     if request.method == "POST":
+        print("request.POST")
+        print (request.POST)
         #Get Token
         access_token = AccessToken.objects.get(token = request.POST.get("access_token"),
         expires__gt = timezone.now())
@@ -79,10 +91,10 @@ def customer_add_order(request):
 
             #Step2 - Create an order_details
             for item in order_details:
-                OrderDetail.objects.craete(
+                OrderDetail.objects.create(
                     order = order,
                     item_id = item["item_id"],
-                    quantity = item["quantity"],
+                    qty = item["quantity"],
                     sub_total = Item.objects.get(id = item["item_id"]).price * item["quantity"]
                 )
 
@@ -92,3 +104,12 @@ def customer_add_order(request):
 
 def customer_latest_order(request):
     return JsonResponse({})
+
+
+
+def shop_order_notification(request, last_request_time):
+    notification = Order.objects.filter(
+        shop = request.user.shop,
+        created_at__gt = last_request_time
+    ).count()
+    return JsonResponse({"notification" : notification})

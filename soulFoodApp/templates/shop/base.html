@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
 
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      var now = new Date();
+
+      setInterval(function(){
+        $.ajax({
+          url : 'http://127.0.0.1:8000/api/shop/order/notification/'+now.toISOString()+'/',
+          method : "GET",
+          success : function(data) {
+            if(data['notification'] === 0){
+              $('.badge').text('');
+            }else{
+              $('.badge').text(data['notification']);
+            }
+          }
+        })
+      }, 5000)
+    })
+  </script>
+{% endblock %}
+
 {% block sidebar %}
   <div class="text-center">
       <img class="img-circle" src="{{ MEDIA_URL }}{{ request.user.shop.logo }}" 
@@ -12,16 +34,17 @@
   </div>
 
   <div class="list-group">
-    <span class="text-uppercase">
-        Dashboard
+    <span class="text-uppercase">Dashboard </span>
         
-        <a href="{% url 'shop-order' %}" class="list-group-item active" >Orders</a>
-        <a href="{% url 'shop-item' %}" class="list-group-item" >Items</a>
-        <a href="{% url 'shop-report' %}" class="list-group-item" >Reports</a>
+    <a href="{% url 'shop-order' %}" class="list-group-item active" >
+        Orders <span class="badge"></span>
+    </a>
+    <a href="{% url 'shop-item' %}" class="list-group-item" >Items</a>
+    <a href="{% url 'shop-report' %}" class="list-group-item" >Reports</a>
 
-        <span class="text-uppercase">Profile</span>
-        <a href="{% url 'shop-account' %}" class="list-group-item">Account</a>
-    </span>
+    <span class="text-uppercase">Profile</span>
+    <a href="{% url 'shop-account' %}" class="list-group-item">Account</a>
+    
   </div>
 
   <div class="text-center">
