@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from soulFoodApp.models import Item, Order
 
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -73,7 +74,6 @@ def shop_edit_item(request, item_id):
 
 
 
-
 ### ORDER URLS mentioned here   
 @login_required(login_url='/shop/sign-in/')
 def shop_order(request):
@@ -89,9 +89,48 @@ def shop_order(request):
     orders = Order.objects.filter(shop = request.user.shop).order_by("-id")
     return render(request, 'shop/order.html', {"orders" : orders })  
 
+
+
 @login_required(login_url='/shop/sign-in/')
 def shop_report(request):
-    return render(request, 'shop/report.html', {})  
+    # Calculate revenue & number of order by days of current week
+    from datetime import datetime, timedelta
+
+    revenue = []
+    orders = []
+
+    #Calculate weekdays
+    today = datetime.now()
+    current_weekdays = [today + timedelta(days = i) for i in range(0 - today.weekday(), 7 - today.weekday())]
+
+    for day in current_weekdays:
+        delivered_orders = Order.objects.filter(
+            shop = request.user.shop,
+            status = Order.DELIVERED,
+            created_at__year = day.year,
+            created_at__month = day.month,
+            created_at__day = day.day
+        )
+        revenue.append(sum(order.total for order in delivered_orders))
+        orders.append(delivered_orders.count())
+
+    #Top three selling items
+    top3_items = Item.objects.filter(shop = request.user.shop)\
+            .annotate(total_order = Sum('orderdetail__qty'))\
+            .order_by("-total_order")[:3]
+    
+    items = {
+        "labels" : [item.name for item in top3_items],
+        "data"  : [item.total_order or 0 for item in top3_items]
+    }
+
+    print(items)
+
+    return render(request, 'shop/report.html', {
+         "revenue" : revenue,
+         "orders" : orders,
+         "items" : items
+    })  
     
 
 def shop_sign_up(request):
